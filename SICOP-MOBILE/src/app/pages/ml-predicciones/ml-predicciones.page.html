@@ -1,0 +1,365 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Predicciones ML</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="loadModelInfo()">
+        <ion-icon name="refresh-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <ion-toolbar>
+    <ion-segment [(ngModel)]="selectedSegment" (ionChange)="segmentChanged($event)" mode="md">
+      <ion-segment-button value="prediccion" layout="icon-top">
+        <ion-icon name="stats-chart-outline"></ion-icon>
+        <ion-label>Predicción</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="anomalias" layout="icon-top">
+        <ion-icon name="warning-outline"></ion-icon>
+        <ion-label>Anomalías</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="modelo" layout="icon-top">
+        <ion-icon name="information-circle-outline"></ion-icon>
+        <ion-label>Modelo</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- TAB: PREDICCIÓN -->
+  <div *ngIf="selectedSegment === 'prediccion'" class="tab-content">
+    <!-- Formulario de entrada -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Parámetros Operacionales</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-grid>
+          <!-- ROW 1: Turbidez -->
+          <ion-row>
+            <ion-col size="12" size-md="6">
+              <ion-item>
+                <ion-label position="stacked">Turbidez Agua Cruda (FTU) <ion-badge color="danger">Requerido</ion-badge></ion-label>
+                <ion-input type="number" [(ngModel)]="formData.turbedad_ac" placeholder="Ej: 15.5"></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col size="12" size-md="6">
+              <ion-item>
+                <ion-label position="stacked">Turbidez Agua Tratada (FTU) <ion-badge color="danger">Requerido</ion-badge></ion-label>
+                <ion-input type="number" [(ngModel)]="formData.turbedad_at" placeholder="Ej: 0.3"></ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+
+          <!-- ROW 2: pH -->
+          <ion-row>
+            <ion-col size="12" size-md="6">
+              <ion-item>
+                <ion-label position="stacked">pH Agua Cruda <ion-badge color="danger">Requerido</ion-badge></ion-label>
+                <ion-input type="number" [(ngModel)]="formData.ph_ac" placeholder="Ej: 7.2" step="0.1"></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col size="12" size-md="6">
+              <ion-item>
+                <ion-label position="stacked">pH Agua Tratada <ion-badge color="danger">Requerido</ion-badge></ion-label>
+                <ion-input type="number" [(ngModel)]="formData.ph_at" placeholder="Ej: 7.5" step="0.1"></ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+
+          <!-- ROW 3: Temperatura y Cloro -->
+          <ion-row>
+            <ion-col size="12" size-md="6">
+              <ion-item>
+                <ion-label position="stacked">Temperatura Agua Cruda (°C) <ion-badge color="danger">Requerido</ion-badge></ion-label>
+                <ion-input type="number" [(ngModel)]="formData.temperatura_ac" placeholder="Ej: 18.5" step="0.1"></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col size="12" size-md="6">
+              <ion-item>
+                <ion-label position="stacked">Cloro Residual (mg/L) <ion-badge color="medium">Opcional</ion-badge></ion-label>
+                <ion-input type="number" [(ngModel)]="formData.cloro_residual" placeholder="Ej: 0.9" step="0.1"></ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+
+          <!-- ROW 4: Caudal y Dosis Sulfato -->
+          <ion-row>
+            <ion-col size="12" size-md="6">
+              <ion-item>
+                <ion-label position="stacked">Caudal Total (m³/día) <ion-badge color="medium">Opcional</ion-badge></ion-label>
+                <ion-input type="number" [(ngModel)]="formData.caudal_total" placeholder="Ej: 3500"></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col size="12" size-md="6">
+              <ion-item>
+                <ion-label position="stacked">Dosis Sulfato (kg/día) <ion-badge color="medium">Opcional</ion-badge></ion-label>
+                <ion-input type="number" [(ngModel)]="formData.dosis_sulfato" placeholder="Ej: 42"></ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+
+          <!-- ROW 5: Dosis Cal -->
+          <ion-row>
+            <ion-col size="12" size-md="6">
+              <ion-item>
+                <ion-label position="stacked">Dosis Cal (kg/día) <ion-badge color="medium">Opcional</ion-badge></ion-label>
+                <ion-input type="number" [(ngModel)]="formData.dosis_cal" placeholder="Ej: 12"></ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+        <!-- Botones -->
+        <ion-grid>
+          <ion-row>
+            <ion-col size="6">
+              <ion-button expand="block" fill="outline" (click)="resetForm()" [disabled]="loading">
+                Resetear
+              </ion-button>
+            </ion-col>
+            <ion-col size="6">
+              <ion-button expand="block" (click)="predict()" [disabled]="loading">
+                <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
+                <span *ngIf="!loading">Predecir</span>
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Mensaje de error -->
+    <ion-card *ngIf="predictionError" color="danger">
+      <ion-card-content>
+        <strong>Error:</strong> {{ predictionError }}
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Resultados de predicción -->
+    <ion-card *ngIf="prediction">
+      <ion-card-header color="success">
+        <ion-card-title>
+          <ion-icon name="flash-outline"></ion-icon>
+          Consumo Químico Predicho
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="12" size-md="6">
+              <div class="prediction-item">
+                <ion-label>
+                  <h2>Sulfato de Aluminio</h2>
+                  <p>{{ prediction.sulfato_kg | number:'1.2-2' }} kg</p>
+                </ion-label>
+              </div>
+            </ion-col>
+            <ion-col size="12" size-md="6">
+              <div class="prediction-item">
+                <ion-label>
+                  <h2>Hipoclorito de Sodio</h2>
+                  <p>{{ prediction.hipoclorito_kg | number:'1.2-2' }} kg</p>
+                </ion-label>
+              </div>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12" size-md="6">
+              <div class="prediction-item">
+                <ion-label>
+                  <h2>Cal Hidratada</h2>
+                  <p>{{ prediction.cal_kg | number:'1.2-2' }} kg</p>
+                </ion-label>
+              </div>
+            </ion-col>
+            <ion-col size="12" size-md="6">
+              <div class="prediction-item">
+                <ion-label>
+                  <h2>Cloro Gas</h2>
+                  <p>{{ prediction.cloro_gas_kg | number:'1.2-2' }} kg</p>
+                </ion-label>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+        <!-- Confianza y costo -->
+        <ion-item lines="none" class="confidence-item">
+          <ion-label>
+            <h3>Confianza del Modelo</h3>
+            <ion-badge [color]="prediction.confidence > 0.8 ? 'success' : 'warning'">
+              {{ (prediction.confidence * 100) | number:'1.0-0' }}%
+            </ion-badge>
+          </ion-label>
+        </ion-item>
+
+        <ion-item lines="none" class="cost-item">
+          <ion-label>
+            <h3>Costo Estimado</h3>
+            <p class="cost-value">${{ prediction.estimated_cost_usd | number:'1.2-2' }}</p>
+          </ion-label>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- TAB: ANOMALÍAS -->
+  <div *ngIf="selectedSegment === 'anomalias'" class="tab-content">
+    <!-- Filtro de días -->
+    <ion-card>
+      <ion-card-content>
+        <ion-item>
+          <ion-label>Últimos días</ion-label>
+          <ion-input type="number" [(ngModel)]="anomalyDays" min="1" max="90"></ion-input>
+          <ion-button slot="end" (click)="loadAnomalies()">
+            <ion-icon name="refresh-outline"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Loading -->
+    <ion-card *ngIf="loadingAnomalies">
+      <ion-card-content class="ion-text-center">
+        <ion-spinner></ion-spinner>
+        <p>Cargando anomalías...</p>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Error -->
+    <ion-card *ngIf="anomaliesError" color="danger">
+      <ion-card-content>{{ anomaliesError }}</ion-card-content>
+    </ion-card>
+
+    <!-- Lista de anomalías -->
+    <ion-card *ngIf="!loadingAnomalies && anomalies.length > 0">
+      <ion-card-header color="warning">
+        <ion-card-title>
+          <ion-icon name="warning-outline"></ion-icon>
+          Anomalías Detectadas ({{ anomalies.length }})
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list>
+          <ion-item *ngFor="let anomaly of anomalies">
+            <ion-label>
+              <h2>{{ anomaly.parameter }}</h2>
+              <p>
+                <strong>Valor:</strong> {{ anomaly.value | number:'1.2-2' }} |
+                <strong>Fecha:</strong> {{ anomaly.timestamp | date:'short' }}
+              </p>
+              <ion-note *ngIf="anomaly.reason">{{ anomaly.reason }}</ion-note>
+            </ion-label>
+            <ion-badge slot="end" [color]="getSeverityColor(anomaly.severity)">
+              {{ anomaly.severity }}
+            </ion-badge>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Sin anomalías -->
+    <ion-card *ngIf="!loadingAnomalies && anomalies.length === 0 && !anomaliesError">
+      <ion-card-content class="ion-text-center">
+        <ion-icon name="checkmark-circle-outline" size="large" color="success"></ion-icon>
+        <p>No se detectaron anomalías en los últimos {{ anomalyDays }} días</p>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- TAB: MODELO -->
+  <div *ngIf="selectedSegment === 'modelo'" class="tab-content">
+    <!-- Loading -->
+    <ion-card *ngIf="loadingModel">
+      <ion-card-content class="ion-text-center">
+        <ion-spinner></ion-spinner>
+        <p>Cargando información del modelo...</p>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Error -->
+    <ion-card *ngIf="modelError" color="danger">
+      <ion-card-content>
+        <p><strong>{{ modelError }}</strong></p>
+        <p>Para entrenar el modelo, ejecuta en el backend:</p>
+        <code>python train_ml_model.py</code>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Información del modelo -->
+    <ion-card *ngIf="!loadingModel && modelInfo">
+      <ion-card-header color="tertiary">
+        <ion-card-title>
+          <ion-icon name="information-circle-outline"></ion-icon>
+          Información del Modelo
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list>
+          <ion-item>
+            <ion-label>
+              <h3>Versión</h3>
+              <p>{{ modelInfo.version }}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-label>
+              <h3>Algoritmo</h3>
+              <p>{{ modelInfo.model_type }}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-label>
+              <h3>Fecha de Entrenamiento</h3>
+              <p>{{ modelInfo.trained_at | date:'medium' }}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-label>
+              <h3>Registros de Entrenamiento</h3>
+              <p>{{ modelInfo.training_records | number }}</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+
+        <!-- Métricas -->
+        <h3 class="metrics-title">Métricas de Rendimiento</h3>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="6" size-md="3" *ngFor="let metric of modelInfo.metrics | keyvalue">
+              <div class="metric-card">
+                <p class="metric-label">{{ metric.key }}</p>
+                <p class="metric-value">{{ metric.value | number:'1.4-4' }}</p>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+        <!-- Parámetros de entrada -->
+        <h3 class="features-title">Parámetros de Entrada ({{ modelInfo.features.length }})</h3>
+        <div class="features-list">
+          <ion-badge *ngFor="let feature of modelInfo.features" color="primary">
+            {{ feature }}
+          </ion-badge>
+        </div>
+
+        <!-- Targets -->
+        <h3 class="targets-title">Variables Predichas ({{ modelInfo.targets.length }})</h3>
+        <div class="targets-list">
+          <ion-badge *ngFor="let target of modelInfo.targets" color="success">
+            {{ target }}
+          </ion-badge>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

@@ -1,0 +1,148 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/reportes"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Consumo Diario</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Filtros</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-label position="stacked">Fecha Inicio</ion-label>
+        <ion-input type="date" [(ngModel)]="fechaInicio"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Fecha Fin</ion-label>
+        <ion-input type="date" [(ngModel)]="fechaFin"></ion-input>
+      </ion-item>
+      <div style="display: flex; gap: 10px; margin-top: 15px;">
+        <ion-button expand="block" (click)="buscar()">
+          <ion-icon name="search-outline" slot="start"></ion-icon>
+          Buscar
+        </ion-button>
+        <ion-button expand="block" color="success" (click)="exportarExcel()" [disabled]="datos.length === 0">
+          <ion-icon name="download-outline" slot="start"></ion-icon>
+          Excel
+        </ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="cargando">
+    <ion-card-content style="text-align: center;">
+      <ion-spinner></ion-spinner>
+      <p>Cargando datos...</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="!cargando && datos.length > 0">
+    <ion-card-header>
+      <ion-card-title>Resultados</ion-card-title>
+      <ion-card-subtitle>Total de registros: {{datos.length}}</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-card *ngFor="let dato of datos" class="consumo-card">
+        <ion-grid class="ion-no-padding">
+          <ion-row>
+            <ion-col size="6">
+              <div class="field-label">Fecha</div>
+              <div class="field-value fecha">{{dato.fecha}}</div>
+            </ion-col>
+            <ion-col size="6">
+              <div class="field-label">Químico</div>
+              <div class="field-value quimico">{{dato.quimico_nombre}}</div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="section-row bodega-section">
+            <ion-col size="12">
+              <div class="section-title">Bodega</div>
+            </ion-col>
+            <ion-col size="4">
+              <div class="field-label">Ingresa</div>
+              <div class="field-value ingresa">{{dato.bodega_ingresa || 0}}</div>
+            </ion-col>
+            <ion-col size="4">
+              <div class="field-label">Egresa</div>
+              <div class="field-value egresa">{{dato.bodega_egresa || 0}}</div>
+            </ion-col>
+            <ion-col size="4">
+              <div class="field-label">Stock</div>
+              <div class="field-value stock">{{dato.bodega_stock || 0}}</div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="section-row tanque-section">
+            <ion-col size="12">
+              <div class="section-title">Tanque 1</div>
+            </ion-col>
+            <ion-col size="6">
+              <div class="field-label">Hora</div>
+              <div class="field-value">{{dato.tanque1_hora || '-'}}</div>
+            </ion-col>
+            <ion-col size="6">
+              <div class="field-label">Consumo (cm)</div>
+              <div class="field-value consumo">{{dato.tanque1_consumo || 0}}</div>
+            </ion-col>
+            <ion-col size="6">
+              <div class="field-label">Lectura Inicial</div>
+              <div class="field-value">{{dato.tanque1_lectura_inicial || 0}} cm</div>
+            </ion-col>
+            <ion-col size="6">
+              <div class="field-label">Lectura Final</div>
+              <div class="field-value">{{dato.tanque1_lectura_final || 0}} cm</div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="section-row tanque-section" *ngIf="dato.tanque2_hora">
+            <ion-col size="12">
+              <div class="section-title">Tanque 2 (Sulfato)</div>
+            </ion-col>
+            <ion-col size="6">
+              <div class="field-label">Hora</div>
+              <div class="field-value">{{dato.tanque2_hora}}</div>
+            </ion-col>
+            <ion-col size="6">
+              <div class="field-label">Consumo (cm)</div>
+              <div class="field-value consumo">{{dato.tanque2_consumo || 0}}</div>
+            </ion-col>
+            <ion-col size="6">
+              <div class="field-label">Lectura Inicial</div>
+              <div class="field-value">{{dato.tanque2_lectura_inicial || 0}} cm</div>
+            </ion-col>
+            <ion-col size="6">
+              <div class="field-label">Lectura Final</div>
+              <div class="field-value">{{dato.tanque2_lectura_final || 0}} cm</div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="total-row">
+            <ion-col size="12">
+              <div class="field-label">Total Consumo</div>
+              <div class="field-value total">{{dato.total_consumo || 0}} cm</div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row *ngIf="dato.observaciones">
+            <ion-col size="12">
+              <div class="field-label">Observaciones</div>
+              <div class="field-value observaciones">{{dato.observaciones}}</div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="!cargando && datos.length === 0">
+    <ion-card-content style="text-align: center;">
+      <p>No se encontraron registros</p>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

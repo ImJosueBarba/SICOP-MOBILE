@@ -1,0 +1,80 @@
+/**
+ * ============================================================================
+ * REPORTES - PREMIUM NAVIGATION LIST
+ * Cards táctiles con ícono, título y flecha de navegación
+ * ============================================================================
+ */
+
+ion-content {
+  --background: var(--gray-100);
+}
+
+/** Cards de navegación */
+ion-card {
+  margin: 0 0 var(--spacing-3) 0;
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--gray-300);
+  box-shadow: var(--card-shadow);
+  transition: all var(--transition-base);
+  overflow: hidden;
+
+  &:hover {
+    box-shadow: var(--card-shadow-hover);
+    transform: translateY(-2px);
+    border-color: rgba(var(--ion-color-primary-rgb), 0.4);
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.99);
+    box-shadow: var(--card-shadow);
+  }
+
+  ion-card-header {
+    padding: var(--spacing-4) var(--spacing-5);
+    border-bottom: none;
+  }
+}
+
+/** Contenido del encabezado: ícono + título + flecha */
+.card-header-content {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+
+  &::after {
+    content: '›';
+    font-size: 1.75rem;
+    line-height: 1;
+    color: var(--gray-400);
+    margin-left: auto;
+    font-weight: var(--font-weight-normal);
+    flex-shrink: 0;
+    transition: transform var(--transition-fast), color var(--transition-fast);
+  }
+}
+
+ion-card:hover .card-header-content::after {
+  color: var(--ion-color-primary);
+  transform: translateX(4px);
+}
+
+/** Ícono del reporte */
+.reporte-icon {
+  font-size: 2.25rem;
+  flex-shrink: 0;
+  transition: transform var(--transition-fast);
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.15));
+}
+
+ion-card:hover .reporte-icon {
+  transform: scale(1.1) rotate(-5deg);
+}
+
+/** Título del reporte */
+ion-card-title {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--gray-900);
+  line-height: var(--line-height-tight);
+  flex: 1;
+}

@@ -1,0 +1,90 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Centro de Ayuda</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <!-- Barra de búsqueda -->
+  <ion-toolbar *ngIf="!selectedTopic">
+    <ion-searchbar
+      [(ngModel)]="searchQuery"
+      (ionInput)="onSearchChange($event)"
+      placeholder="Buscar ayuda..."
+      animated>
+    </ion-searchbar>
+  </ion-toolbar>
+
+  <!-- Segmentos de categoría -->
+  <ion-toolbar *ngIf="!selectedTopic && searchQuery.length === 0">
+    <ion-segment
+      [(ngModel)]="selectedCategory"
+      (ionChange)="onCategoryChange($event)"
+      scrollable>
+      <ion-segment-button value="all">
+        <ion-label>Todos</ion-label>
+      </ion-segment-button>
+      <ion-segment-button *ngFor="let cat of categories" [value]="cat">
+        <ion-icon [name]="getCategoryIcon(cat)" style="margin-right: 4px;"></ion-icon>
+        <ion-label>{{ getCategoryName(cat) }}</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Vista de lista de temas -->
+  <div *ngIf="!selectedTopic">
+    <ion-list *ngIf="topics.length > 0">
+      <ion-item
+        *ngFor="let topic of topics"
+        button
+        (click)="selectTopic(topic)"
+        class="help-item">
+        <ion-icon
+          [name]="topic.icon"
+          slot="start"
+          [color]="topic.category === 'alerts' ? 'warning' : 'primary'">
+        </ion-icon>
+        <ion-label>
+          <h3>{{ topic.title }}</h3>
+          <p class="category-label">{{ getCategoryName(topic.category) }}</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+
+    <!-- Sin resultados -->
+    <ion-card *ngIf="topics.length === 0" class="empty-state">
+      <ion-card-content style="text-align: center;">
+        <ion-icon name="search-outline" style="font-size: 64px; color: var(--ion-color-medium);"></ion-icon>
+        <p>No se encontraron resultados para "{{ searchQuery }}"</p>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- Vista de detalle de tema -->
+  <div *ngIf="selectedTopic">
+    <ion-button fill="clear" (click)="backToList()" class="back-button">
+      <ion-icon name="arrow-back" slot="start"></ion-icon>
+      Volver
+    </ion-button>
+
+    <ion-card class="topic-detail-card">
+      <ion-card-header>
+        <div class="topic-header">
+          <ion-icon [name]="selectedTopic.icon" class="topic-icon"></ion-icon>
+          <div>
+            <ion-card-title>{{ selectedTopic.title }}</ion-card-title>
+            <p class="category-badge">{{ getCategoryName(selectedTopic.category) }}</p>
+          </div>
+        </div>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="topic-content" [innerHTML]="selectedTopic.content"></div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

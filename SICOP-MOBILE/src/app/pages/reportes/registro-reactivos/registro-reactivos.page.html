@@ -1,0 +1,118 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/reportes"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Registro de Reactivos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Acciones</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <div style="display: flex; gap: 10px;">
+        <ion-button expand="block" (click)="buscar()">
+          <ion-icon name="refresh-outline" slot="start"></ion-icon>
+          Recargar
+        </ion-button>
+        <ion-button expand="block" color="success" (click)="exportarExcel()" [disabled]="datos.length === 0">
+          <ion-icon name="download-outline" slot="start"></ion-icon>
+          Excel
+        </ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="cargando">
+    <ion-card-content style="text-align: center;">
+      <ion-spinner></ion-spinner>
+      <p>Cargando datos...</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="!cargando && datos.length > 0">
+    <ion-card-header>
+      <ion-card-title>Reactivos Registrados</ion-card-title>
+      <ion-card-subtitle>Total de registros: {{datos.length}}</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-card *ngFor="let dato of datos" class="reactivo-card" [class.stock-bajo]="stockBajo(dato)">
+        <ion-grid class="ion-no-padding">
+          <ion-row>
+            <ion-col size="12">
+              <div class="field-label">Nombre</div>
+              <div class="field-value nombre">{{dato.nombre}}</div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row *ngIf="dato.descripcion">
+            <ion-col size="12">
+              <div class="field-label">Descripción</div>
+              <div class="field-value descripcion">{{dato.descripcion}}</div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="stock-row">
+            <ion-col size="4">
+              <div class="field-label">Stock Actual</div>
+              <div class="field-value stock-actual" [class.alerta]="stockBajo(dato)">
+                {{dato.stock_actual}} {{dato.unidad_medida}}
+                <ion-icon *ngIf="stockBajo(dato)" name="warning-outline" class="warning-icon"></ion-icon>
+              </div>
+            </ion-col>
+            <ion-col size="4">
+              <div class="field-label">Stock Mínimo</div>
+              <div class="field-value">{{dato.stock_minimo}} {{dato.unidad_medida}}</div>
+            </ion-col>
+            <ion-col size="4">
+              <div class="field-label">Estado</div>
+              <div class="field-value">
+                <ion-badge [color]="stockBajo(dato) ? 'warning' : 'success'">
+                  {{stockBajo(dato) ? 'Bajo' : 'OK'}}
+                </ion-badge>
+              </div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="detalles-row">
+            <ion-col size="6" *ngIf="dato.precio_unitario">
+              <div class="field-label">Precio Unitario</div>
+              <div class="field-value precio">${{dato.precio_unitario}}</div>
+            </ion-col>
+            <ion-col size="6" *ngIf="dato.proveedor">
+              <div class="field-label">Proveedor</div>
+              <div class="field-value">{{dato.proveedor}}</div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row *ngIf="dato.fecha_vencimiento || dato.lote">
+            <ion-col size="6" *ngIf="dato.fecha_vencimiento">
+              <div class="field-label">Vencimiento</div>
+              <div class="field-value">{{dato.fecha_vencimiento}}</div>
+            </ion-col>
+            <ion-col size="6" *ngIf="dato.lote">
+              <div class="field-label">Lote</div>
+              <div class="field-value">{{dato.lote}}</div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row *ngIf="dato.observaciones">
+            <ion-col size="12">
+              <div class="field-label">Observaciones</div>
+              <div class="field-value observaciones">{{dato.observaciones}}</div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="!cargando && datos.length === 0">
+    <ion-card-content style="text-align: center;">
+      <p>No se encontraron reactivos registrados</p>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

@@ -1,0 +1,184 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/reportes"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Control de Operación</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Filtros</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-label position="stacked">Fecha Inicio</ion-label>
+        <ion-input type="date" [(ngModel)]="fechaInicio"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Fecha Fin</ion-label>
+        <ion-input type="date" [(ngModel)]="fechaFin"></ion-input>
+      </ion-item>
+      <div style="display: flex; gap: 10px; margin-top: 15px;">
+        <ion-button expand="block" (click)="buscar()">
+          <ion-icon name="search-outline" slot="start"></ion-icon>
+          Buscar
+        </ion-button>
+        <ion-button expand="block" color="success" (click)="exportarExcel()" [disabled]="datos.length === 0">
+          <ion-icon name="download-outline" slot="start"></ion-icon>
+          Excel
+        </ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="loading">
+    <ion-card-content style="text-align: center;">
+      <ion-spinner></ion-spinner>
+      <p>Cargando datos...</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="!loading && datos.length > 0">
+    <ion-card-header>
+      <ion-card-title>Resultados</ion-card-title>
+      <ion-card-subtitle>Total de registros: {{datos.length}}</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-card *ngFor="let dato of datos" class="operacion-card">
+        <ion-grid class="ion-no-padding">
+          <ion-row>
+            <ion-col size="6">
+              <div class="field-label">Fecha</div>
+              <div class="field-value fecha">{{dato.fecha}}</div>
+            </ion-col>
+            <ion-col size="6">
+              <div class="field-label">Hora</div>
+              <div class="field-value">{{dato.hora}}</div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="section-row">
+            <ion-col size="12">
+              <div class="section-title">Turbedad y Color</div>
+            </ion-col>
+            <ion-col size="4">
+              <div class="field-label">Turb. AC</div>
+              <div class="field-value">{{dato.turbedad_ac || '-'}}</div>
+            </ion-col>
+            <ion-col size="4">
+              <div class="field-label">Turb. AT</div>
+              <div class="field-value">{{dato.turbedad_at || '-'}}</div>
+            </ion-col>
+            <ion-col size="4">
+              <div class="field-label">Color</div>
+              <div class="field-value">{{dato.color || '-'}}</div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="section-row">
+            <ion-col size="12">
+              <div class="section-title">pH</div>
+            </ion-col>
+            <ion-col size="4">
+              <div class="field-label">pH AC</div>
+              <div class="field-value">{{dato.ph_ac || '-'}}</div>
+            </ion-col>
+            <ion-col size="4">
+              <div class="field-label">pH Sulf</div>
+              <div class="field-value">{{dato.ph_sulf || '-'}}</div>
+            </ion-col>
+            <ion-col size="4">
+              <div class="field-label">pH AT</div>
+              <div class="field-value">{{dato.ph_at || '-'}}</div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="section-row">
+            <ion-col size="12">
+              <div class="section-title">Dosis</div>
+            </ion-col>
+            <ion-col size="4">
+              <div class="field-label">Sulfato</div>
+              <div class="field-value">{{dato.dosis_sulfato || '-'}}</div>
+            </ion-col>
+            <ion-col size="4">
+              <div class="field-label">Cal</div>
+              <div class="field-value">{{dato.dosis_cal || '-'}}</div>
+            </ion-col>
+            <ion-col size="4">
+              <div class="field-label">Floergel</div>
+              <div class="field-value">{{dato.dosis_floergel || '-'}}</div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="section-row">
+            <ion-col size="12">
+              <div class="section-title">Clarificación</div>
+            </ion-col>
+            <ion-col size="3">
+              <div class="field-label">FF</div>
+              <div class="field-value">{{dato.ff || '-'}}</div>
+            </ion-col>
+            <ion-col size="3">
+              <div class="field-label">IS</div>
+              <div class="field-value">{{dato.clarificacion_is || '-'}}</div>
+            </ion-col>
+            <ion-col size="3">
+              <div class="field-label">CS</div>
+              <div class="field-value">{{dato.clarificacion_cs || '-'}}</div>
+            </ion-col>
+            <ion-col size="3">
+              <div class="field-label">FS</div>
+              <div class="field-value">{{dato.clarificacion_fs || '-'}}</div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="section-row">
+            <ion-col size="12">
+              <div class="section-title">Presión</div>
+            </ion-col>
+            <ion-col size="3">
+              <div class="field-label">PSI</div>
+              <div class="field-value">{{dato.presion_psi || '-'}}</div>
+            </ion-col>
+            <ion-col size="3">
+              <div class="field-label">Pre</div>
+              <div class="field-value">{{dato.presion_pre || '-'}}</div>
+            </ion-col>
+            <ion-col size="3">
+              <div class="field-label">Pos</div>
+              <div class="field-value">{{dato.presion_pos || '-'}}</div>
+            </ion-col>
+            <ion-col size="3">
+              <div class="field-label">Total</div>
+              <div class="field-value">{{dato.presion_total || '-'}}</div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="cloro-row">
+            <ion-col size="12">
+              <div class="field-label">Cloro Residual</div>
+              <div class="field-value cloro">{{dato.cloro_residual || '-'}}</div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row *ngIf="dato.observaciones">
+            <ion-col size="12">
+              <div class="field-label">Observaciones</div>
+              <div class="field-value observaciones">{{dato.observaciones}}</div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="!loading && datos.length === 0">
+    <ion-card-content style="text-align: center;">
+      <p>No se encontraron registros</p>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

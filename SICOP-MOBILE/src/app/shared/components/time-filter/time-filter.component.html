@@ -1,0 +1,18 @@
+<div class="time-filter-container">
+  <ion-chip 
+    *ngFor="let preset of filterPresets"
+    [class.selected]="isSelected(preset.preset)"
+    (click)="selectFilter(preset.preset)"
+    class="filter-chip">
+    <ion-icon 
+      *ngIf="isSelected(preset.preset)" 
+      name="checkmark-circle"
+      color="success">
+    </ion-icon>
+    <ion-icon 
+      *ngIf="!isSelected(preset.preset)" 
+      name="time-outline">
+    </ion-icon>
+    <ion-label>{{ preset.label }}</ion-label>
+  </ion-chip>
+</div>

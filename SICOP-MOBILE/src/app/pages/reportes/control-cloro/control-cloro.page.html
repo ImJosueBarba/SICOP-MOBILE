@@ -1,0 +1,112 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/reportes"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Control de Cloro</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Filtros</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-label position="stacked">Fecha Inicio</ion-label>
+        <ion-input type="date" [(ngModel)]="fechaInicio"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Fecha Fin</ion-label>
+        <ion-input type="date" [(ngModel)]="fechaFin"></ion-input>
+      </ion-item>
+      <div style="display: flex; gap: 10px; margin-top: 15px;">
+        <ion-button expand="block" (click)="buscar()">
+          <ion-icon name="search-outline" slot="start"></ion-icon>
+          Buscar
+        </ion-button>
+        <ion-button expand="block" color="success" (click)="exportarExcel()" [disabled]="datos.length === 0">
+          <ion-icon name="download-outline" slot="start"></ion-icon>
+          Excel
+        </ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="cargando">
+    <ion-card-content style="text-align: center;">
+      <ion-spinner></ion-spinner>
+      <p>Cargando datos...</p>
+    </ion-card-content>
+  </ion-card>
+
+  <div *ngIf="!cargando && datos.length > 0">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-subtitle>Total de registros: {{datos.length}}</ion-card-subtitle>
+      </ion-card-header>
+    </ion-card>
+
+    <ion-card *ngFor="let dato of datos" class="registro-card">
+      <ion-card-content>
+        <ion-grid class="ion-no-padding">
+          <ion-row>
+            <ion-col size="6">
+              <div class="field-label">FECHA</div>
+              <div class="field-value">{{dato.fecha_mes | date:'dd/MM/yyyy'}}</div>
+            </ion-col>
+            <ion-col size="6">
+              <ion-col size="6">
+              <div class="field-label">DOCUMENTO</div>
+              <div class="field-value-small">{{dato.documento_soporte}}</div>
+            </ion-col>
+            </ion-col>
+          </ion-row>
+          
+          <ion-row>
+            <ion-col size="12">
+              <div class="field-label">PROVEEDOR/SOLICITANTE</div>
+              <div class="field-value">{{dato.proveedor_solicitante}}</div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col size="12">
+              <div class="field-label">ESPECIFICACIÓN</div>
+              <div class="field-value-small">{{dato.especificacion}}</div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="inventario-row">
+            <ion-col size="4">
+              <div class="field-label">ENTRA</div>
+              <div class="field-value entrada">{{dato.cantidad_entra || '-'}}</div>
+            </ion-col>
+            <ion-col size="4">
+              <div class="field-label">SALE</div>
+              <div class="field-value salida">{{dato.cantidad_sale}}</div>
+            </ion-col>
+            <ion-col size="4">
+              <div class="field-label">SALDO</div>
+              <div class="field-value saldo">{{dato.cantidad_saldo}}</div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row *ngIf="dato.observaciones">
+            <ion-col size="12">
+              <div class="field-label">OBSERVACIONES</div>
+              <div class="field-value-small">{{dato.observaciones}}</div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <ion-card *ngIf="!cargando && datos.length === 0">
+    <ion-card-content style="text-align: center;">
+      <p>No se encontraron registros</p>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

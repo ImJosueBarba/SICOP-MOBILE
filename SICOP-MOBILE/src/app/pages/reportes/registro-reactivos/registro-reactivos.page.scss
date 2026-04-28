@@ -1,0 +1,135 @@
+/**
+ * ============================================================================
+ * REGISTRO DE REACTIVOS - INVENTARIO QUÍMICO
+ * Stock normal = Azul | Stock bajo = Ámbar alerta | Precio = Verde
+ * ============================================================================
+ */
+
+ion-content {
+  --background: var(--gray-100);
+}
+
+ion-card {
+  margin: var(--spacing-4) var(--spacing-4) 0;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--card-shadow);
+  border: 1px solid var(--gray-300);
+
+  &:first-child {
+    margin-top: var(--spacing-4);
+  }
+}
+
+/** Tarjeta de reactivo */
+.reactivo-card {
+  margin: var(--spacing-3) var(--spacing-4);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--gray-200);
+  overflow: hidden;
+  transition: box-shadow var(--transition-base);
+
+  &:hover {
+    box-shadow: var(--shadow-md);
+  }
+
+  ion-grid {
+    padding: var(--spacing-3);
+  }
+
+  /** Alerta de stock bajo — borde ámbar izquierdo */
+  &.stock-bajo {
+    border-left: 4px solid var(--status-warning);
+    background: linear-gradient(
+      to right,
+      rgba(245, 158, 11, 0.06),
+      transparent 35%
+    );
+  }
+}
+
+.field-label {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--gray-500);
+  margin-bottom: var(--spacing-1);
+  line-height: 1;
+}
+
+.field-value {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--gray-900);
+  margin-bottom: var(--spacing-3);
+  line-height: var(--line-height-tight);
+
+  &.nombre {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    color: var(--gray-900);
+  }
+
+  &.descripcion {
+    font-size: var(--font-size-xs);
+    color: var(--gray-600);
+    font-style: italic;
+    line-height: var(--line-height-relaxed);
+  }
+
+  &.stock-actual {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--ion-color-primary);
+    font-variant-numeric: tabular-nums;
+
+    &.alerta {
+      color: var(--status-warning);
+    }
+  }
+
+  &.precio {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    color: var(--status-success);
+    font-variant-numeric: tabular-nums;
+  }
+
+  &.observaciones {
+    font-size: var(--font-size-xs);
+    color: var(--gray-600);
+    font-style: italic;
+  }
+}
+
+/** Bloque de stock con fondo gris */
+.stock-row {
+  background: var(--gray-100);
+  border-radius: var(--radius-base);
+  border: 1px solid var(--gray-200);
+  padding: var(--spacing-3) 0;
+  margin: var(--spacing-2) 0;
+}
+
+/** Separador de detalles */
+.detalles-row {
+  border-top: 1px solid var(--gray-200);
+  padding-top: var(--spacing-3);
+  margin-top: var(--spacing-2);
+}
+
+/** Ícono de alerta ámbar */
+.warning-icon {
+  color: var(--status-warning);
+  font-size: 1rem;
+  vertical-align: middle;
+  margin-left: var(--spacing-1);
+}
+
+ion-badge {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}

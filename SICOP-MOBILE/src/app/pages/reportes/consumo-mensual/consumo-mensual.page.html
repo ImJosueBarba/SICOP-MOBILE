@@ -1,0 +1,161 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/reportes"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Consumo Químico Mensual</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Filtros</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-label position="stacked">Mes</ion-label>
+        <ion-select [(ngModel)]="mes">
+          <ion-select-option *ngFor="let m of meses" [value]="m.valor">{{m.nombre}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Año</ion-label>
+        <ion-input type="number" [(ngModel)]="anio"></ion-input>
+      </ion-item>
+      <div style="display: flex; gap: 10px; margin-top: 15px;">
+        <ion-button expand="block" (click)="buscar()">
+          <ion-icon name="search-outline" slot="start"></ion-icon>
+          Buscar
+        </ion-button>
+        <ion-button expand="block" color="success" (click)="exportarExcel()" [disabled]="datos.length === 0">
+          <ion-icon name="download-outline" slot="start"></ion-icon>
+          Excel
+        </ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="cargando">
+    <ion-card-content style="text-align: center;">
+      <ion-spinner></ion-spinner>
+      <p>Cargando datos...</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="!cargando && datos.length > 0">
+    <ion-card-header>
+      <ion-card-title>Resultados</ion-card-title>
+      <ion-card-subtitle>Total de registros: {{datos.length}}</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-card *ngFor="let dato of datos" class="mensual-card">
+        <ion-grid class="ion-no-padding">
+          <ion-row>
+            <ion-col size="6">
+              <div class="field-label">Mes</div>
+              <div class="field-value fecha">{{meses[dato.mes - 1]?.nombre}} {{dato.anio}}</div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="quimico-section">
+            <ion-col size="12">
+              <div class="section-title">Sulfato de Aluminio (KG)</div>
+            </ion-col>
+            <ion-col size="6">
+              <div class="field-label">Consumo</div>
+              <div class="field-value">{{dato.sulfato_con || 0}} KG</div>
+            </ion-col>
+            <ion-col size="6">
+              <div class="field-label">Ingreso</div>
+              <div class="field-value">{{dato.sulfato_ing || 0}} KG</div>
+            </ion-col>
+            <ion-col size="6" *ngIf="dato.sulfato_guia">
+              <div class="field-label">Guía #</div>
+              <div class="field-value">{{dato.sulfato_guia}}</div>
+            </ion-col>
+            <ion-col size="6" *ngIf="dato.sulfato_re">
+              <div class="field-label">Remanente</div>
+              <div class="field-value">{{dato.sulfato_re}} KG</div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="quimico-section">
+            <ion-col size="12">
+              <div class="section-title">Cal (Sacos)</div>
+            </ion-col>
+            <ion-col size="4">
+              <div class="field-label">Consumo</div>
+              <div class="field-value">{{dato.cal_con || 0}}</div>
+            </ion-col>
+            <ion-col size="4">
+              <div class="field-label">Ingreso</div>
+              <div class="field-value">{{dato.cal_ing || 0}}</div>
+            </ion-col>
+            <ion-col size="4" *ngIf="dato.cal_guia">
+              <div class="field-label">Guía #</div>
+              <div class="field-value">{{dato.cal_guia}}</div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="quimico-section">
+            <ion-col size="12">
+              <div class="section-title">Hipoclorito de Calcio</div>
+            </ion-col>
+            <ion-col size="4">
+              <div class="field-label">Consumo</div>
+              <div class="field-value">{{dato.hipoclorito_con || 0}}</div>
+            </ion-col>
+            <ion-col size="4">
+              <div class="field-label">Ingreso</div>
+              <div class="field-value">{{dato.hipoclorito_ing || 0}}</div>
+            </ion-col>
+            <ion-col size="4" *ngIf="dato.hipoclorito_guia">
+              <div class="field-label">Guía #</div>
+              <div class="field-value">{{dato.hipoclorito_guia}}</div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="quimico-section">
+            <ion-col size="12">
+              <div class="section-title">Gas Licuado de Cloro</div>
+            </ion-col>
+            <ion-col size="6">
+              <div class="field-label">Consumo</div>
+              <div class="field-value">{{dato.cloro_gas_con || 0}}</div>
+            </ion-col>
+            <ion-col size="6">
+              <div class="field-label">Ingreso Balón</div>
+              <div class="field-value">{{dato.cloro_gas_ing_bal || 0}}</div>
+            </ion-col>
+            <ion-col size="6">
+              <div class="field-label">Ingreso Bodega</div>
+              <div class="field-value">{{dato.cloro_gas_ing_bdg || 0}}</div>
+            </ion-col>
+            <ion-col size="6">
+              <div class="field-label">Egreso</div>
+              <div class="field-value">{{dato.cloro_gas_egre || 0}}</div>
+            </ion-col>
+            <ion-col size="12" *ngIf="dato.cloro_gas_guia">
+              <div class="field-label">Guía #</div>
+              <div class="field-value">{{dato.cloro_gas_guia}}</div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row *ngIf="dato.observaciones">
+            <ion-col size="12">
+              <div class="field-label">Observaciones</div>
+              <div class="field-value observaciones">{{dato.observaciones}}</div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="!cargando && datos.length === 0">
+    <ion-card-content style="text-align: center;">
+      <p>No se encontraron registros</p>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

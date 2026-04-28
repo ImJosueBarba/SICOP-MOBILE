@@ -1,0 +1,134 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/reportes"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Producción de Filtros</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Filtros</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-label position="stacked">Fecha Inicio</ion-label>
+        <ion-input type="date" [(ngModel)]="fechaInicio"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Fecha Fin</ion-label>
+        <ion-input type="date" [(ngModel)]="fechaFin"></ion-input>
+      </ion-item>
+      <div style="display: flex; gap: 10px; margin-top: 15px;">
+        <ion-button expand="block" (click)="buscar()">
+          <ion-icon name="search-outline" slot="start"></ion-icon>
+          Buscar
+        </ion-button>
+        <ion-button expand="block" color="success" (click)="exportarExcel()" [disabled]="datos.length === 0">
+          <ion-icon name="download-outline" slot="start"></ion-icon>
+          Excel
+        </ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="cargando">
+    <ion-card-content style="text-align: center;">
+      <ion-spinner></ion-spinner>
+      <p>Cargando datos...</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="!cargando && datos.length > 0">
+    <ion-card-header>
+      <ion-card-title>Resultados</ion-card-title>
+      <ion-card-subtitle>Total de registros: {{datos.length}}</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-card *ngFor="let dato of datos" class="produccion-card">
+        <ion-grid class="ion-no-padding">
+          <ion-row>
+            <ion-col size="6">
+              <div class="field-label">Fecha</div>
+              <div class="field-value fecha">{{dato.fecha}}</div>
+            </ion-col>
+            <ion-col size="6">
+              <div class="field-label">Hora</div>
+              <div class="field-value">{{dato.hora}}</div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="filtros-header">
+            <ion-col size="12">
+              <div class="section-title">Filtros - Altura (cm) / Caudal (l/s)</div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="filtros-row">
+            <ion-col size="4">
+              <div class="filtro-item">
+                <div class="filtro-label">Filtro 1</div>
+                <div class="filtro-value">{{dato.filtro1_h || '-'}} / {{dato.filtro1_q || '-'}}</div>
+              </div>
+            </ion-col>
+            <ion-col size="4">
+              <div class="filtro-item">
+                <div class="filtro-label">Filtro 2</div>
+                <div class="filtro-value">{{dato.filtro2_h || '-'}} / {{dato.filtro2_q || '-'}}</div>
+              </div>
+            </ion-col>
+            <ion-col size="4">
+              <div class="filtro-item">
+                <div class="filtro-label">Filtro 3</div>
+                <div class="filtro-value">{{dato.filtro3_h || '-'}} / {{dato.filtro3_q || '-'}}</div>
+              </div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="filtros-row">
+            <ion-col size="4">
+              <div class="filtro-item">
+                <div class="filtro-label">Filtro 4</div>
+                <div class="filtro-value">{{dato.filtro4_h || '-'}} / {{dato.filtro4_q || '-'}}</div>
+              </div>
+            </ion-col>
+            <ion-col size="4">
+              <div class="filtro-item">
+                <div class="filtro-label">Filtro 5</div>
+                <div class="filtro-value">{{dato.filtro5_h || '-'}} / {{dato.filtro5_q || '-'}}</div>
+              </div>
+            </ion-col>
+            <ion-col size="4">
+              <div class="filtro-item">
+                <div class="filtro-label">Filtro 6</div>
+                <div class="filtro-value">{{dato.filtro6_h || '-'}} / {{dato.filtro6_q || '-'}}</div>
+              </div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="total-row" *ngIf="dato.caudal_total">
+            <ion-col size="12">
+              <div class="field-label">Caudal Total</div>
+              <div class="field-value total">{{dato.caudal_total}} l/s</div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row *ngIf="dato.observaciones">
+            <ion-col size="12">
+              <div class="field-label">Observaciones</div>
+              <div class="field-value observaciones">{{dato.observaciones}}</div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="!cargando && datos.length === 0">
+    <ion-card-content style="text-align: center;">
+      <p>No se encontraron registros</p>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

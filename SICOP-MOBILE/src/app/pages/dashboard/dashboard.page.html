@@ -1,0 +1,270 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Dashboard BI</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="themeService.toggle()" [title]="themeService.darkMode ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'">
+        <ion-icon [name]="themeService.darkMode ? 'sunny-outline' : 'moon-outline'"></ion-icon>
+      </ion-button>
+      <ion-button (click)="openHelp()">
+        <ion-icon name="help-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Time Filters -->
+  <div class="filter-section">
+    <app-time-filter
+      [selectedPreset]="selectedFilter"
+      (filterChange)="onFilterChange($event)">
+    </app-time-filter>
+    
+    <!-- Auto-refresh indicator -->
+    <div class="auto-refresh-badge" *ngIf="lastUpdate">
+      <ion-icon name="sync-outline"></ion-icon>
+      <span>Actualizado: {{ lastUpdate | date:'HH:mm:ss' }}</span>
+      <ion-badge color="success">Auto 60s</ion-badge>
+    </div>
+  </div>
+
+  <!-- Alert Badge -->
+  <ion-card *ngIf="alertCounts.total > 0" class="alert-banner" color="warning">
+    <ion-card-content>
+      <div class="alert-banner-content">
+        <ion-icon name="alert-circle"></ion-icon>
+        <div>
+          <strong>{{ alertCounts.total }} alertas activas</strong>
+          <p>{{ alertCounts.critical }} críticas · {{ alertCounts.warning }} advertencias</p>
+        </div>
+        <ion-button fill="clear" size="small" (click)="viewAlerts()">
+          Ver
+        </ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Cargando KPIs...</p>
+  </div>
+
+  <!-- KPI Cards Grid -->
+  <ion-grid *ngIf="!loading && dashboard">
+    <!-- Row 1: Turbidez -->
+    <ion-row>
+      <ion-col size="12" size-md="6">
+        <ion-card [class]="'kpi-card status-' + dashboard.turbidityRaw.status">
+          <ion-card-header>
+            <div class="kpi-header">
+              <div class="kpi-label">
+                <ion-icon name="water-outline"></ion-icon>
+                <span>{{ dashboard.turbidityRaw.label }}</span>
+              </div>
+              <ion-badge [color]="getStatusColor(dashboard.turbidityRaw.status)">
+                {{ getStatusLabel(dashboard.turbidityRaw.status) }}
+              </ion-badge>
+            </div>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="kpi-value">
+              <span class="value">{{ dashboard.turbidityRaw.current }}</span>
+              <span class="unit">{{ dashboard.turbidityRaw.unit }}</span>
+              <ion-icon [name]="getTrendIcon(dashboard.turbidityRaw.trend)" 
+                        [class]="'trend-' + dashboard.turbidityRaw.trend"></ion-icon>
+            </div>
+            <div class="kpi-threshold">
+              <small>Normal: {{ dashboard.turbidityRaw.threshold.min }}-{{ dashboard.turbidityRaw.threshold.max }} {{ dashboard.turbidityRaw.unit }}</small>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+      <ion-col size="12" size-md="6">
+        <ion-card [class]="'kpi-card status-' + dashboard.turbidityTreated.status">
+          <ion-card-header>
+            <div class="kpi-header">
+              <div class="kpi-label">
+                <ion-icon name="water"></ion-icon>
+                <span>{{ dashboard.turbidityTreated.label }}</span>
+              </div>
+              <ion-badge [color]="getStatusColor(dashboard.turbidityTreated.status)">
+                {{ getStatusLabel(dashboard.turbidityTreated.status) }}
+              </ion-badge>
+            </div>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="kpi-value">
+              <span class="value">{{ dashboard.turbidityTreated.current }}</span>
+              <span class="unit">{{ dashboard.turbidityTreated.unit }}</span>
+              <ion-icon [name]="getTrendIcon(dashboard.turbidityTreated.trend)" 
+                        [class]="'trend-' + dashboard.turbidityTreated.trend"></ion-icon>
+            </div>
+            <div class="kpi-threshold">
+              <small>Normal: {{ dashboard.turbidityTreated.threshold.min }}-{{ dashboard.turbidityTreated.threshold.max }} {{ dashboard.turbidityTreated.unit }}</small>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <!-- Row 2: pH -->
+    <ion-row>
+      <ion-col size="12" size-md="6">
+        <ion-card [class]="'kpi-card status-' + dashboard.phRaw.status">
+          <ion-card-header>
+            <div class="kpi-header">
+              <div class="kpi-label">
+                <ion-icon name="flask-outline"></ion-icon>
+                <span>{{ dashboard.phRaw.label }}</span>
+              </div>
+              <ion-badge [color]="getStatusColor(dashboard.phRaw.status)">
+                {{ getStatusLabel(dashboard.phRaw.status) }}
+              </ion-badge>
+            </div>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="kpi-value">
+              <span class="value">{{ dashboard.phRaw.current | number:'1.1-1' }}</span>
+              <ion-icon [name]="getTrendIcon(dashboard.phRaw.trend)" 
+                        [class]="'trend-' + dashboard.phRaw.trend"></ion-icon>
+            </div>
+            <div class="kpi-threshold">
+              <small>Normal: {{ dashboard.phRaw.threshold.min }}-{{ dashboard.phRaw.threshold.max }}</small>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+      <ion-col size="12" size-md="6">
+        <ion-card [class]="'kpi-card status-' + dashboard.phTreated.status">
+          <ion-card-header>
+            <div class="kpi-header">
+              <div class="kpi-label">
+                <ion-icon name="flask"></ion-icon>
+                <span>{{ dashboard.phTreated.label }}</span>
+              </div>
+              <ion-badge [color]="getStatusColor(dashboard.phTreated.status)">
+                {{ getStatusLabel(dashboard.phTreated.status) }}
+              </ion-badge>
+            </div>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="kpi-value">
+              <span class="value">{{ dashboard.phTreated.current | number:'1.1-1' }}</span>
+              <ion-icon [name]="getTrendIcon(dashboard.phTreated.trend)" 
+                        [class]="'trend-' + dashboard.phTreated.trend"></ion-icon>
+            </div>
+            <div class="kpi-threshold">
+              <small>Normal: {{ dashboard.phTreated.threshold.min }}-{{ dashboard.phTreated.threshold.max }}</small>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <!-- Row 3: Cloro & Presión -->
+    <ion-row>
+      <ion-col size="12" size-md="6">
+        <ion-card [class]="'kpi-card status-' + dashboard.chlorineResidual.status">
+          <ion-card-header>
+            <div class="kpi-header">
+              <div class="kpi-label">
+                <ion-icon name="beaker-outline"></ion-icon>
+                <span>{{ dashboard.chlorineResidual.label }}</span>
+              </div>
+              <ion-badge [color]="getStatusColor(dashboard.chlorineResidual.status)">
+                {{ getStatusLabel(dashboard.chlorineResidual.status) }}
+              </ion-badge>
+            </div>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="kpi-value">
+              <span class="value">{{ dashboard.chlorineResidual.current | number:'1.1-2' }}</span>
+              <span class="unit">{{ dashboard.chlorineResidual.unit }}</span>
+              <ion-icon [name]="getTrendIcon(dashboard.chlorineResidual.trend)" 
+                        [class]="'trend-' + dashboard.chlorineResidual.trend"></ion-icon>
+            </div>
+            <div class="kpi-threshold">
+              <small>Normal: {{ dashboard.chlorineResidual.threshold.min }}-{{ dashboard.chlorineResidual.threshold.max }} {{ dashboard.chlorineResidual.unit }}</small>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+      <ion-col size="12" size-md="6">
+        <ion-card [class]="'kpi-card status-' + dashboard.pressure.status">
+          <ion-card-header>
+            <div class="kpi-header">
+              <div class="kpi-label">
+                <ion-icon name="speedometer-outline"></ion-icon>
+                <span>{{ dashboard.pressure.label }}</span>
+              </div>
+              <ion-badge [color]="getStatusColor(dashboard.pressure.status)">
+                {{ getStatusLabel(dashboard.pressure.status) }}
+              </ion-badge>
+            </div>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="kpi-value">
+              <span class="value">{{ dashboard.pressure.current }}</span>
+              <span class="unit">{{ dashboard.pressure.unit }}</span>
+              <ion-icon [name]="getTrendIcon(dashboard.pressure.trend)" 
+                        [class]="'trend-' + dashboard.pressure.trend"></ion-icon>
+            </div>
+            <div class="kpi-threshold">
+              <small>Normal: {{ dashboard.pressure.threshold.min }}-{{ dashboard.pressure.threshold.max }} {{ dashboard.pressure.unit }}</small>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <!-- Quick Actions -->
+  <ion-card *ngIf="!loading">
+    <ion-card-header>
+      <ion-card-title>Acceso Rápido</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="6" size-md="3">
+            <ion-button expand="block" fill="outline" [routerLink]="['/ml-predicciones']">
+              <ion-icon name="stats-chart-outline" slot="start"></ion-icon>
+              ML
+            </ion-button>
+          </ion-col>
+          <ion-col size="6" size-md="3">
+            <ion-button expand="block" fill="outline" [routerLink]="['/reportes']">
+              <ion-icon name="document-text-outline" slot="start"></ion-icon>
+              Reportes
+            </ion-button>
+          </ion-col>
+          <ion-col size="6" size-md="3">
+            <ion-button expand="block" fill="outline" (click)="refreshData()">
+              <ion-icon name="refresh-outline" slot="start"></ion-icon>
+              Actualizar
+            </ion-button>
+          </ion-col>
+          <ion-col size="6" size-md="3">
+            <ion-button expand="block" fill="outline" (click)="openHelp()">
+              <ion-icon name="help-circle-outline" slot="start"></ion-icon>
+              Ayuda
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Last Update -->
+  <div *ngIf="dashboard" class="last-update">
+    <ion-icon name="time-outline"></ion-icon>
+    <span>Última actualización: {{ dashboard.lastUpdate | date:'dd/MM/yyyy HH:mm' }}</span>
+  </div>
+</ion-content>

@@ -1,0 +1,270 @@
+/**
+ * ============================================================================
+ * DASHBOARD BI - ENTERPRISE DESIGN
+ * Mancomunidad La Esperanza
+ * Sistema de Monitoreo Industrial
+ * ============================================================================
+ */
+
+/** Content Background */
+ion-content {
+  --background: var(--gray-100);
+}
+
+/** Time Filter Section */
+.filter-section {
+  padding: var(--spacing-3, 12px);
+  background: var(--ion-color-light);
+  border-bottom: 1px solid var(--ion-color-light-shade);
+}
+
+/** Auto-refresh Indicator */
+.auto-refresh-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 6px 12px;
+  background: rgba(var(--ion-color-success-rgb), 0.1);
+  border-radius: 8px;
+  font-size: 12px;
+  color: var(--ion-color-dark);
+
+  ion-icon {
+    font-size: 16px;
+    color: var(--ion-color-success);
+    animation: rotate 2s linear infinite;
+  }
+
+  span {
+    flex: 1;
+    font-weight: 500;
+  }
+
+  ion-badge {
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/** Alert Banner */
+.alert-banner {
+  margin: var(--spacing-3, 12px);
+  border-left: 4px solid var(--ion-color-warning);
+
+  .alert-banner-content {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3, 12px);
+
+    ion-icon {
+      font-size: 32px;
+      color: var(--ion-color-warning);
+      flex-shrink: 0;
+    }
+
+    div {
+      flex: 1;
+
+      strong {
+        display: block;
+        font-size: 16px;
+        margin-bottom: 4px;
+      }
+
+      p {
+        margin: 0;
+        font-size: 13px;
+        opacity: 0.8;
+      }
+    }
+
+    ion-button {
+      flex-shrink: 0;
+    }
+  }
+}
+
+/** Loading State */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  gap: var(--spacing-3, 12px);
+
+  ion-spinner {
+    width: 48px;
+    height: 48px;
+  }
+
+  p {
+    color: var(--ion-color-medium);
+  }
+}
+
+/** KPI Cards */
+.kpi-card {
+  margin: var(--spacing-2, 8px);
+  border-radius: var(--radius-lg, 12px);
+  box-shadow: var(--shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.10));
+  transition: all 0.2s ease;
+
+  &:hover {
+    box-shadow: var(--shadow-md, 0 4px 6px rgba(0, 0, 0, 0.11));
+    transform: translateY(-2px);
+  }
+
+  // Estado borders + fondos sutiles
+  &.status-normal {
+    border-left: 4px solid var(--ion-color-success);
+    background: linear-gradient(
+      150deg,
+      rgba(122, 184, 0, 0.05) 0%,
+      transparent 55%
+    );
+  }
+
+  &.status-warning {
+    border-left: 4px solid var(--ion-color-warning);
+    background: linear-gradient(
+      150deg,
+      rgba(245, 158, 11, 0.07) 0%,
+      transparent 55%
+    );
+  }
+
+  &.status-critical {
+    border-left: 4px solid var(--ion-color-danger);
+    animation: pulse 2s infinite;
+    background: linear-gradient(
+      150deg,
+      rgba(239, 68, 68, 0.07) 0%,
+      transparent 55%
+    );
+  }
+
+  &.status-unknown {
+    border-left: 4px solid var(--ion-color-medium);
+  }
+
+  .kpi-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .kpi-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      ion-icon {
+        font-size: 20px;
+        color: var(--ion-color-primary);
+      }
+
+      span {
+        font-weight: 600;
+        font-size: 14px;
+        color: var(--ion-color-dark);
+      }
+    }
+
+    ion-badge {
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+  }
+
+  .kpi-value {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    margin: var(--spacing-3, 12px) 0;
+
+    .value {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--ion-color-dark);
+      line-height: 1;
+    }
+
+    .unit {
+      font-size: 16px;
+      color: var(--ion-color-medium);
+      font-weight: 500;
+    }
+
+    ion-icon {
+      font-size: 20px;
+      margin-left: auto;
+
+      &.trend-up {
+        color: var(--ion-color-danger);
+      }
+
+      &.trend-down {
+        color: var(--ion-color-success);
+      }
+
+      &.trend-stable {
+        color: var(--ion-color-medium);
+      }
+    }
+  }
+
+  .kpi-threshold {
+    small {
+      color: var(--ion-color-medium);
+      font-size: 12px;
+    }
+  }
+}
+
+/** Last Update Footer */
+.last-update {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: var(--spacing-4, 16px);
+  color: var(--ion-color-medium);
+  font-size: 13px;
+
+  ion-icon {
+    font-size: 16px;
+  }
+}
+
+/** Pulse Animation for Critical Alerts */
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(var(--ion-color-danger-rgb), 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(var(--ion-color-danger-rgb), 0);
+  }
+}
+
+/** Responsive Adjustments */
+@media (max-width: 768px) {
+  .kpi-card {
+    .kpi-value {
+      .value {
+        font-size: 28px;
+      }
+
+      .unit {
+        font-size: 14px;
+      }
+    }
+  }
+}

@@ -1,0 +1,111 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/reportes"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Monitoreo Fisicoquímico</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Filtros</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-label position="stacked">Fecha Inicio</ion-label>
+        <ion-input type="date" [(ngModel)]="fechaInicio"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Fecha Fin</ion-label>
+        <ion-input type="date" [(ngModel)]="fechaFin"></ion-input>
+      </ion-item>
+      <div style="display: flex; gap: 10px; margin-top: 15px;">
+        <ion-button expand="block" (click)="buscar()">
+          <ion-icon name="search-outline" slot="start"></ion-icon>
+          Buscar
+        </ion-button>
+        <ion-button expand="block" color="success" (click)="exportarExcel()" [disabled]="datos.length === 0">
+          <ion-icon name="download-outline" slot="start"></ion-icon>
+          Excel
+        </ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="cargando">
+    <ion-card-content style="text-align: center;">
+      <ion-spinner></ion-spinner>
+      <p>Cargando datos...</p>
+    </ion-card-content>
+  </ion-card>
+
+  <div *ngIf="!cargando && datos.length > 0">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-subtitle>Total de registros: {{datos.length}}</ion-card-subtitle>
+      </ion-card-header>
+    </ion-card>
+
+    <ion-card *ngFor="let dato of datos" class="registro-card">
+      <ion-card-content>
+        <ion-grid class="ion-no-padding">
+          <ion-row>
+            <ion-col size="6">
+              <div class="field-label">FECHA</div>
+              <div class="field-value">{{dato.fecha | date:'dd/MM/yyyy'}}</div>
+            </ion-col>
+            <ion-col size="3">
+              <div class="field-label">MUESTRA</div>
+              <div class="field-value muestra-badge">{{dato.muestra_numero}}</div>
+            </ion-col>
+            <ion-col size="3">
+              <div class="field-label">HORA</div>
+              <div class="field-value-small">{{dato.hora}}</div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="parametros-row">
+            <ion-col size="6">
+              <div class="param-title">PH AC/AT</div>
+              <div class="param-value">{{dato.ac_ph}} / {{dato.at_ph}}</div>
+            </ion-col>
+            <ion-col size="6">
+              <div class="param-title">CE AC/AT</div>
+              <div class="param-value">{{dato.ac_ce}} / {{dato.at_ce}}</div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="parametros-row">
+            <ion-col size="6">
+              <div class="param-title">TDS AC/AT</div>
+              <div class="param-value">{{dato.ac_tds}} / {{dato.at_tds}}</div>
+            </ion-col>
+            <ion-col size="6">
+              <div class="param-title">SALINIDAD AC/AT</div>
+              <div class="param-value">{{dato.ac_salinidad}} / {{dato.at_salinidad}}</div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="parametros-row">
+            <ion-col size="6">
+              <div class="param-title">TEMP AC/AT</div>
+              <div class="param-value">{{dato.ac_temperatura}}° / {{dato.at_temperatura}}°</div>
+            </ion-col>
+            <ion-col size="6" *ngIf="dato.observaciones">
+              <div class="param-title">OBSERVACIONES</div>
+              <div class="param-value-obs">{{dato.observaciones}}</div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <ion-card *ngIf="!cargando && datos.length === 0">
+    <ion-card-content style="text-align: center;">
+      <p>No se encontraron registros</p>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

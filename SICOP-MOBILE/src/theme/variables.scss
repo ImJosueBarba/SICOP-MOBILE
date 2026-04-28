@@ -1,0 +1,280 @@
+/**
+ * ============================================================================
+ * MANCOMUNIDAD LA ESPERANZA - DESIGN SYSTEM
+ * Sistema de Diseño Profesional para Gestión de Tratamiento de Agua
+ * ============================================================================
+ *
+ * Paleta de Colores: Basada en identidad corporativa
+ * Grid System: 8px base unit
+ * Typography: Jerarquía técnica industrial
+ * Shadows: Soft, minimal y profesionales
+ * Border Radius: Consistente 12-16px
+ */
+
+/** ==========================================================================
+ *  COLOR PALETTE - BASED ON CORPORATE LOGO
+ *  ========================================================================== */
+
+:root {
+  /** Brand Colors - Extracted from Logo */
+  --brand-primary-navy: #0F4C81;        /* Deep blue from logo */
+  --brand-primary-blue: #1E5AA8;        /* Main corporate blue */
+  --brand-accent-green: #7AB800;        /* Organic green accent */
+  --brand-accent-green-light: #86BC25;  /* Light green variation */
+  
+  /** Technical Grays - Industrial Palette */
+  --gray-50: #F0F4F8;   /* Background extra light */
+  --gray-100: #F8F9FB;  /* Background light */
+  --gray-200: #F1F3F6;  /* Background subtle */
+  --gray-300: #E4E7EB;  /* Border light */
+  --gray-400: #CBD2D9;  /* Border default */
+  --gray-500: #9AA5B1;  /* Text muted */
+  --gray-600: #7B8794;  /* Text secondary */
+  --gray-700: #616E7C;  /* Text primary */
+  --gray-800: #52606D;  /* Text dark */
+  --gray-900: #3E4C59;  /* Text darkest */
+  
+  /** Semantic Colors - Industrial Status */
+  --status-success: #10B981;     /* Success green */
+  --status-success-light: #D1FAE5;
+  --status-warning: #F59E0B;     /* Warning amber */
+  --status-warning-light: #FEF3C7;
+  --status-error: #EF4444;       /* Error red */
+  --status-error-light: #FEE2E2;
+  --status-info: #3B82F6;        /* Info blue */
+  --status-info-light: #DBEAFE;
+  
+  /** Water Treatment Specific */
+  --water-turbidity: #60A5FA;    /* Blue water tones */
+  --water-ph: #34D399;           /* pH indicator green */
+  --water-chlorine: #A78BFA;     /* Chlorine purple */
+  --chemical-orange: #FB923C;    /* Chemical orange */
+  
+  /** ========================================================================
+   *  IONIC COLOR SCHEME - PROFESSIONAL OVERRIDE
+   *  ======================================================================== */
+  
+  /** Primary - Corporate Navy Blue */
+  --ion-color-primary: #0F4C81;
+  --ion-color-primary-rgb: 15, 76, 129;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #0D4272;
+  --ion-color-primary-tint: #276599;
+  
+  /** Secondary - Technical Gray */
+  --ion-color-secondary: #616E7C;
+  --ion-color-secondary-rgb: 97, 110, 124;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-contrast-rgb: 255, 255, 255;
+  --ion-color-secondary-shade: #556069;
+  --ion-color-secondary-tint: #718089;
+  
+  /** Tertiary - Brand Blue */
+  --ion-color-tertiary: #1E5AA8;
+  --ion-color-tertiary-rgb: 30, 90, 168;
+  --ion-color-tertiary-contrast: #ffffff;
+  --ion-color-tertiary-contrast-rgb: 255, 255, 255;
+  --ion-color-tertiary-shade: #1A4F94;
+  --ion-color-tertiary-tint: #3469B1;
+  
+  /** Success - Organic Green */
+  --ion-color-success: #7AB800;
+  --ion-color-success-rgb: 122, 184, 0;
+  --ion-color-success-contrast: #ffffff;
+  --ion-color-success-contrast-rgb: 255, 255, 255;
+  --ion-color-success-shade: #6BA200;
+  --ion-color-success-tint: #87BF1A;
+  
+  /** Warning - Industrial Amber */
+  --ion-color-warning: #F59E0B;
+  --ion-color-warning-rgb: 245, 158, 11;
+  --ion-color-warning-contrast: #000000;
+  --ion-color-warning-contrast-rgb: 0, 0, 0;
+  --ion-color-warning-shade: #D88B0A;
+  --ion-color-warning-tint: #F6A823;
+  
+  /** Danger - Technical Red */
+  --ion-color-danger: #EF4444;
+  --ion-color-danger-rgb: 239, 68, 68;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade: #D23C3C;
+  --ion-color-danger-tint: #F15757;
+  
+  /** Light - Background Clean */
+  --ion-color-light: #F8F9FB;
+  --ion-color-light-rgb: 248, 249, 251;
+  --ion-color-light-contrast: #3E4C59;
+  --ion-color-light-contrast-rgb: 62, 76, 89;
+  --ion-color-light-shade: #DADBDD;
+  --ion-color-light-tint: #F9FAFB;
+  
+  /** Medium - Neutral Gray */
+  --ion-color-medium: #9AA5B1;
+  --ion-color-medium-rgb: 154, 165, 177;
+  --ion-color-medium-contrast: #ffffff;
+  --ion-color-medium-contrast-rgb: 255, 255, 255;
+  --ion-color-medium-shade: #88919B;
+  --ion-color-medium-tint: #A4AEB9;
+  
+  /** Dark - Technical Dark */
+  --ion-color-dark: #3E4C59;
+  --ion-color-dark-rgb: 62, 76, 89;
+  --ion-color-dark-contrast: #ffffff;
+  --ion-color-dark-contrast-rgb: 255, 255, 255;
+  --ion-color-dark-shade: #36434E;
+  --ion-color-dark-tint: #515E6A;
+  
+  /** ========================================================================
+   *  TYPOGRAPHY - TECHNICAL HIERARCHY
+   *  ======================================================================== */
+  
+  --font-family-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  --font-family-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, monospace;
+  
+  /** Font Sizes - 8px scale */
+  --font-size-xs: 0.75rem;      /* 12px - Labels pequeños */
+  --font-size-sm: 0.875rem;     /* 14px - Body text */
+  --font-size-base: 1rem;       /* 16px - Default */
+  --font-size-md: 1.125rem;     /* 18px - Subtitles */
+  --font-size-lg: 1.25rem;      /* 20px - Card titles */
+  --font-size-xl: 1.5rem;       /* 24px - Section headers */
+  --font-size-2xl: 1.875rem;    /* 30px - Page titles */
+  --font-size-3xl: 2.25rem;     /* 36px - Hero numbers */
+  
+  /** Font Weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  /** Line Heights */
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+  
+  /** ========================================================================
+   *  SPACING - 8PX GRID SYSTEM
+   *  ======================================================================== */
+  
+  --spacing-0: 0;
+  --spacing-1: 0.25rem;   /* 4px */
+  --spacing-2: 0.5rem;    /* 8px - Base unit */
+  --spacing-3: 0.75rem;   /* 12px */
+  --spacing-4: 1rem;      /* 16px */
+  --spacing-5: 1.25rem;   /* 20px */
+  --spacing-6: 1.5rem;    /* 24px */
+  --spacing-8: 2rem;      /* 32px */
+  --spacing-10: 2.5rem;   /* 40px */
+  --spacing-12: 3rem;     /* 48px */
+  --spacing-16: 4rem;     /* 64px */
+  
+  /** ========================================================================
+   *  BORDER RADIUS - CONSISTENT CURVES
+   *  ======================================================================== */
+  
+  --radius-none: 0;
+  --radius-sm: 0.375rem;   /* 6px - Small elements */
+  --radius-base: 0.5rem;   /* 8px - Inputs */
+  --radius-md: 0.75rem;    /* 12px - Cards, buttons */
+  --radius-lg: 1rem;       /* 16px - Large cards */
+  --radius-xl: 1.5rem;     /* 24px - Hero sections */
+  --radius-full: 9999px;   /* Circular */
+  
+  /** ========================================================================
+   *  SHADOWS - SOFT & PROFESSIONAL
+   *  ======================================================================== */
+  
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.08), 0 1px 2px -1px rgba(0, 0, 0, 0.06);
+  --shadow-base: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 6px 12px -2px rgba(0, 0, 0, 0.10), 0 3px 7px -3px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 10px 20px -3px rgba(0, 0, 0, 0.12), 0 4px 8px -4px rgba(0, 0, 0, 0.10);
+  --shadow-xl: 0 20px 35px -5px rgba(0, 0, 0, 0.15), 0 8px 15px -6px rgba(0, 0, 0, 0.12);
+  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+  
+  /** Card Shadows */
+  --card-shadow: var(--shadow-sm);
+  --card-shadow-hover: var(--shadow-md);
+  --card-shadow-elevated: var(--shadow-lg);
+  
+  /** ========================================================================
+   *  TRANSITIONS - SMOOTH & PROFESSIONAL
+   *  ======================================================================== */
+  
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /** ========================================================================
+   *  Z-INDEX LAYERS
+   *  ======================================================================== */
+  
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
+  
+  /** ========================================================================
+   *  COMPONENT SPECIFIC VARIABLES
+   *  ======================================================================== */
+  
+  /** Background */
+  --ion-background-color: #ffffff;
+  --ion-background-color-rgb: 255, 255, 255;
+  
+  /** Text */
+  --ion-text-color: #3E4C59;
+  --ion-text-color-rgb: 62, 76, 89;
+  
+  /** Toolbar */
+  --ion-toolbar-background: #0F4C81;
+  --ion-toolbar-color: #ffffff;
+  --ion-toolbar-border-color: transparent;
+  
+  /** Card */
+  --ion-card-background: #ffffff;
+  --ion-card-color: #3E4C59;
+  
+  /** Item */
+  --ion-item-background: transparent;
+  --ion-item-border-color: var(--gray-300);
+}
+
+/** ==========================================================================
+ *  DARK MODE - MANUAL TOGGLE (via .ion-palette-dark class on <html>)
+ *  ========================================================================== */
+
+.ion-palette-dark {
+  /** Dark backgrounds */
+  --ion-background-color: #1A202C;
+  --ion-background-color-rgb: 26, 32, 44;
+
+  --ion-text-color: #E2E8F0;
+  --ion-text-color-rgb: 226, 232, 240;
+
+  --ion-color-light: #2D3748;
+  --ion-color-light-rgb: 45, 55, 72;
+
+  --ion-card-background: #2D3748;
+
+  /** Gray scale overrides for dark mode */
+  --gray-50:  #1A202C;
+  --gray-100: #2D3748;
+  --gray-200: #374151;
+  --gray-300: #4A5568;
+  --gray-400: #718096;
+  --gray-500: #A0AEC0;
+  --gray-600: #A0AEC0;
+  --gray-700: #CBD5E0;
+  --gray-800: #E2E8F0;
+  --gray-900: #F7FAFC;
+
+  /** Shadow overrides */
+  --card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px -1px rgba(0, 0, 0, 0.25);
+  --card-shadow-hover: 0 6px 12px -2px rgba(0, 0, 0, 0.4), 0 3px 7px -3px rgba(0, 0, 0, 0.3);
+}

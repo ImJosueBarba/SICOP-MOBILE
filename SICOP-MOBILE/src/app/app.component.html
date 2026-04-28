@@ -1,0 +1,47 @@
+<ion-app>
+  <ion-split-pane contentId="main-content">
+    <ion-menu contentId="main-content" type="overlay">
+      <ion-header>
+        <ion-toolbar color="primary">
+          <ion-title>Planta Esperanza</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <ion-list>
+          <ion-menu-toggle auto-hide="false" *ngFor="let page of appPages">
+            <ion-item 
+              [routerLink]="page.url" 
+              routerLinkActive="selected" 
+              [routerLinkActiveOptions]="{exact: true}"
+              detail="false">
+              <ion-icon slot="start" [name]="page.icon"></ion-icon>
+              <ion-label>{{ page.title }}</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+        </ion-list>
+
+        <!-- Theme Toggle -->
+        <div class="theme-toggle-container">
+          <ion-item lines="none" class="theme-toggle-item">
+            <ion-icon slot="start" [name]="themeService.darkMode ? 'moon-outline' : 'sunny-outline'"></ion-icon>
+            <ion-label>{{ themeService.darkMode ? 'Modo Oscuro' : 'Modo Claro' }}</ion-label>
+            <ion-toggle
+              slot="end"
+              [checked]="themeService.darkMode"
+              (ionChange)="themeService.toggle()"
+              color="primary">
+            </ion-toggle>
+          </ion-item>
+        </div>
+        
+        <div class="logout-container">
+          <ion-item button (click)="logout()" detail="false">
+            <ion-icon slot="start" name="log-out-outline"></ion-icon>
+            <ion-label>Cerrar Sesión</ion-label>
+          </ion-item>
+        </div>
+      </ion-content>
+    </ion-menu>
+    <ion-router-outlet id="main-content"></ion-router-outlet>
+  </ion-split-pane>
+</ion-app>

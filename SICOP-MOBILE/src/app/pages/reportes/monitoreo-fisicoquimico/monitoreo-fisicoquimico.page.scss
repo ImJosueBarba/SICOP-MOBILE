@@ -1,0 +1,137 @@
+/**
+ * ============================================================================
+ * MONITOREO FISICOQUÍMICO - PARÁMETROS DE CALIDAD DEL AGUA
+ * pH = Verde | Turbedad = Azul agua | Cloro = Púrpura
+ * ============================================================================
+ */
+
+ion-content {
+  --background: var(--gray-100);
+}
+
+ion-card {
+  margin: var(--spacing-4) var(--spacing-4) 0;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--card-shadow);
+  border: 1px solid var(--gray-300);
+
+  &:first-child {
+    margin-top: var(--spacing-4);
+  }
+}
+
+.registro-card {
+  margin: var(--spacing-3) var(--spacing-4);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--gray-200);
+  overflow: hidden;
+  transition: box-shadow var(--transition-base);
+
+  &:hover {
+    box-shadow: var(--shadow-md);
+  }
+
+  ion-grid {
+    padding: var(--spacing-3);
+  }
+}
+
+.field-label {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--gray-500);
+  margin-bottom: var(--spacing-1);
+  line-height: 1;
+}
+
+.field-value {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--gray-900);
+  margin-bottom: var(--spacing-3);
+  line-height: var(--line-height-tight);
+}
+
+.field-value-small {
+  font-size: var(--font-size-xs);
+  color: var(--gray-600);
+  margin-bottom: var(--spacing-3);
+}
+
+/** Badge de muestra — corporativo */
+.muestra-badge {
+  display: inline-flex;
+  align-items: center;
+  background: var(--ion-color-primary);
+  color: var(--ion-color-primary-contrast);
+  padding: var(--spacing-1) var(--spacing-4);
+  border-radius: var(--radius-full);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+  letter-spacing: 0.02em;
+  margin-bottom: var(--spacing-3);
+}
+
+/** Bloque de parámetros — acento izquierdo */
+.parametros-row {
+  background: rgba(15, 76, 129, 0.04);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-3) var(--spacing-3) var(--spacing-1);
+  margin-top: var(--spacing-3);
+  border: 1px solid var(--gray-200);
+  border-left: 3px solid var(--ion-color-primary);
+}
+
+.param-title {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ion-color-primary);
+  margin-bottom: var(--spacing-1);
+  line-height: 1;
+}
+
+.param-value {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--gray-900);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--line-height-tight);
+}
+
+.param-value-obs {
+  font-size: var(--font-size-xs);
+  color: var(--gray-500);
+  font-style: italic;
+  line-height: var(--line-height-normal);
+  margin-top: var(--spacing-1);
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--spacing-12) var(--spacing-6);
+  gap: var(--spacing-4);
+
+  p {
+    color: var(--gray-600);
+    font-size: var(--font-size-sm);
+  }
+}
+
+.error-message {
+  color: var(--status-error);
+  padding: var(--spacing-4);
+  text-align: center;
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-sm);
+}
+
+ion-item {
+  margin-bottom: var(--spacing-2);
+}
